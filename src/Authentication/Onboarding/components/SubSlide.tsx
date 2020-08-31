@@ -1,8 +1,7 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import { fontFamily } from '../../../global/styles';
-import Animated from 'react-native-reanimated';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { Button } from '../../../elements';
+import { Text } from '../../../elements';
 
 const { height } = Dimensions.get('window');
 
@@ -13,24 +12,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    paddingVertical: 25,
+    paddingHorizontal: 30,
   },
 
-  subtitle: {
-    fontFamily: fontFamily.semibold,
-    fontSize: 24,
-    lineHeight: 30,
-    color: '#0C0D34',
+  title: {
     textAlign: 'center',
   },
 
-  description: {
+  body: {
     marginTop: 12,
     marginBottom: 40,
-    fontFamily: fontFamily.regular,
-    fontSize: 16,
-    lineHeight: 24,
-    color: '#0C0D34',
     textAlign: 'center',
   },
 });
@@ -45,8 +37,12 @@ interface SubSlideProps {
 const SubSlide = ({ subtitle, description, last, onPress }: SubSlideProps) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>{subtitle}</Text>
-      <Text style={styles.description}>{description}</Text>
+      <Text variant="title2" style={styles.title}>
+        {subtitle}
+      </Text>
+      <Text variant="body" style={styles.body}>
+        {description}
+      </Text>
       <Button
         label={last ? "Let's get started" : 'Next'}
         variant={last ? 'primary' : 'default'}

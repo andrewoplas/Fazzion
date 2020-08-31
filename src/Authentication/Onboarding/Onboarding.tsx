@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import Animated, { multiply } from 'react-native-reanimated';
-import { interpolateColor, onScrollEvent, useValue } from 'react-native-redash';
+import { Dimensions, StyleSheet, View, Image } from 'react-native';
+import Animated, { divide, multiply, interpolate, Extrapolate } from 'react-native-reanimated';
+import { interpolateColor, useScrollHandler } from 'react-native-redash';
+import theme, { palette } from '../../global/theme';
+import PaginationDot from './components/PaginationDot';
 import Slide, { SLIDE_HEIGHT } from './components/Slide';
 import SubSlide from './components/SubSlide';
 
 const { width } = Dimensions.get('window');
-
-const BORDER_RADIUS = 75;
 
 const styles = StyleSheet.create({
   container: {
@@ -18,7 +18,15 @@ const styles = StyleSheet.create({
   slider: {
     height: SLIDE_HEIGHT,
     backgroundColor: 'cyan',
-    borderBottomRightRadius: BORDER_RADIUS,
+    borderBottomRightRadius: theme.borderRadii?.xl,
+  },
+
+  underlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    overflow: 'hidden',
+    borderBottomRightRadius: theme.borderRadii?.xl,
   },
 
   footer: {
@@ -28,8 +36,18 @@ const styles = StyleSheet.create({
   footerContent: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#fff',
-    borderTopLeftRadius: BORDER_RADIUS,
+    backgroundColor: palette.white,
+    borderTopLeftRadius: theme.borderRadii?.xl,
+  },
+
+  pagination: {
+    ...StyleSheet.absoluteFillObject,
+    width,
+    height: theme.borderRadii.xl / 1.5,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
   },
 });
 
@@ -38,46 +56,83 @@ const slides = [
     title: 'Relaxed',
     subtitle: 'Find Your Outfits',
     description: "Confused about your outfit? Don't worry! Find the best outfit here!",
-    color: '#BFEAF5',
+    color: palette.mintTulip,
     isRight: false,
+    picture: {
+      src: require('../../assets/images/1.png'),
+      width: 2513,
+      height: 3583,
+    },
   },
   {
     title: 'Playful',
     subtitle: 'Heat it First, Wear it First',
     description: 'Hating the clothes in your wardrobe? Explore hundreds of outfit ideas',
-    color: '#BEECC4',
+    color: palette.padua,
     isRight: true,
+    picture: {
+      src: require('../../assets/images/2.png'),
+      width: 2791,
+      height: 3744,
+    },
   },
   {
     title: 'Eccentric',
     subtitle: 'Your Style, Your Way',
     description: 'Create your individual & unique style and look amazing everyday',
-    color: '#FFE4D9',
+    color: palette.peach,
     isRight: false,
+    picture: {
+      src: require('../../assets/images/3.png'),
+      width: 2738,
+      height: 3244,
+    },
   },
   {
     title: 'Funky',
     subtitle: 'Look Good, Feel Good',
     description: 'Discover the latest trends in fashion and explore your personality',
-    color: '#FFDDDD',
+    color: palette.pippin,
     isRight: true,
+    picture: {
+      src: require('../../assets/images/4.png'),
+      width: 1757,
+      height: 2551,
+    },
   },
 ];
 
 const Onboarding = () => {
   const scrollRef = useRef<Animated.ScrollView>(null);
-
-  const x = useValue(0);
-  const onScroll = onScrollEvent({ x });
-
+  const { scrollHandler, x } = useScrollHandler();
   const backgroundColor = interpolateColor(x, {
-    inputRange: slides.map((_, index) => index * width),
-    outputRange: slides.map(({ color }) => color),
+    inputRange: slides.map((_, i) => i * width),
+    outputRange: slides.map((slide) => slide.color),
   });
 
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.slider, { backgroundColor }]}>
+        {slides.map(({ picture }, index) => {
+          const opacity = interpolate(x, {
+            inputRange: [-0.5, 0, 0.5].map((n) => (index + n) * width),
+            outputRange: [0, 1, 0],
+            extrapolate: Extrapolate.CLAMP,
+          });
+
+          return (
+            <Animated.View key={index} style={[styles.underlay, { opacity }]}>
+              <Image
+                source={picture.src}
+                style={{
+                  width: width - theme.borderRadii.xl,
+                  height: ((width - theme.borderRadii.xl) * picture.height) / picture.width,
+                }}
+              />
+            </Animated.View>
+          );
+        })}
+
         <Animated.ScrollView
           ref={scrollRef}
           horizontal
@@ -85,7 +140,7 @@ const Onboarding = () => {
           decelerationRate="fast"
           showsHorizontalScrollIndicator={false}
           bounces={false}
-          onScroll={onScroll}
+          {...scrollHandler}
         >
           {slides.map((slide, index) => (
             <Slide key={index} label={slide.title} right={slide.isRight} />
@@ -100,10 +155,17 @@ const Onboarding = () => {
           }}
         ></Animated.View>
 
+        <View style={styles.pagination}>
+          {slides.map((_, index) => (
+            <PaginationDot key={index} index={index} currentIndex={divide(x, width)} />
+          ))}
+        </View>
+
         <Animated.View
           style={[
             styles.footerContent,
-            { width: width * slides.length, flex: 1, transform: [{ translateX: multiply(x, 0) }] },
+            // eslint-disable-next-line react-native/no-inline-styles
+            { width: width * slides.length, flex: 1, transform: [{ translateX: multiply(x, -1) }] },
           ]}
         >
           {slides.map((slide, index) => (
