@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { StyleSheet } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import { Text, View, StyleSheet } from 'react-native';
-import { fontFamily } from '../global/styles';
+import { Text } from '.';
+import { palette } from '../global/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,27 +12,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 245,
   },
-
-  label: {
-    fontSize: 15,
-    fontFamily: fontFamily.semibold,
-    textAlign: 'center',
-  },
 });
 
 interface ButtonProps {
   label: string;
-  variant: 'default' | 'primary';
+  variant: 'default' | 'primary' | 'transparent';
   onPress: () => void;
+  style: any;
 }
 
-const Button = ({ label, variant, onPress }: ButtonProps) => {
-  const backgroundColor = variant === 'primary' ? '#2CB9B0' : 'rgba(12,13,52,0.05)';
-  const color = variant === 'primary' ? '#fff' : '#0C0D34';
+const Button = ({ label, variant, onPress, style }: ButtonProps) => {
+  const getBackgroundColor = useCallback(() => {
+    switch (variant) {
+      case 'primary':
+        return palette.shamrock;
+      case 'transparent':
+        return 'transparent';
+      default:
+        return 'rgba(12,13,52,0.05)';
+    }
+  }, [variant]);
+
+  const getTextColor = useCallback(() => {
+    switch (variant) {
+      case 'primary':
+        return palette.white;
+      case 'transparent':
+        return palette.textTitle;
+      default:
+        return palette.textTitle;
+    }
+  }, [variant]);
 
   return (
-    <RectButton style={[styles.container, { backgroundColor }]} onPress={onPress}>
-      <Text style={[styles.label, { color }]}>{label}</Text>
+    <RectButton
+      style={[styles.container, { backgroundColor: getBackgroundColor() }, style]}
+      onPress={onPress}
+    >
+      <Text variant="buttonLabel" style={{ color: getTextColor() }}>
+        {label}
+      </Text>
     </RectButton>
   );
 };

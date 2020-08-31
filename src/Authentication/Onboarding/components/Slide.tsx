@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import { fontFamily } from '../../../global/styles';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { Text } from '../../../elements';
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,10 +17,6 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 80,
-    lineHeight: 80,
-    fontFamily: fontFamily.bold,
-    color: 'white',
     textAlign: 'center',
   },
 
@@ -47,7 +43,9 @@ const Slide = ({ label, right }: SlideProps) => {
   return (
     <View style={styles.container}>
       <View style={[styles.titleContainer, { transform: getTransformStyle() }]}>
-        <Text style={styles.title}>{label}</Text>
+        <Text variant="hero" style={styles.title}>
+          {label}
+        </Text>
       </View>
     </View>
   );
