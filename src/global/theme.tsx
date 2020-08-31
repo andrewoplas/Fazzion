@@ -7,6 +7,7 @@ export const palette = {
   peach: '#FFE4D9',
   pippin: '#FFDDDD',
   shamrock: '#2CB9B0',
+  gray: '#F4F0EF',
 
   textTitle: '#0C0D34',
   textBody: 'rgba(12, 13, 52, 0.7)',

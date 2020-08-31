@@ -6,6 +6,7 @@ import theme, { palette } from '../../global/theme';
 import PaginationDot from './components/PaginationDot';
 import Slide, { SLIDE_HEIGHT } from './components/Slide';
 import SubSlide from './components/SubSlide';
+import { StackNavigationProps, Routes } from '../../types/Navigation';
 
 const { width } = Dimensions.get('window');
 
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
   pagination: {
     ...StyleSheet.absoluteFillObject,
     width,
-    height: theme.borderRadii.xl / 1.5,
+    height: (theme.borderRadii?.xl || 1) / 1.5,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -102,13 +103,24 @@ const slides = [
   },
 ];
 
-const Onboarding = () => {
+const Onboarding = ({ navigation }: StackNavigationProps<Routes, 'Onboarding'>) => {
   const scrollRef = useRef<Animated.ScrollView>(null);
   const { scrollHandler, x } = useScrollHandler();
   const backgroundColor = interpolateColor(x, {
     inputRange: slides.map((_, i) => i * width),
     outputRange: slides.map((slide) => slide.color),
   });
+
+  const onNext = (index: number, isLast: boolean) => {
+    if (isLast) {
+      navigation.navigate('Welcome');
+    } else if (scrollRef.current) {
+      scrollRef.current.getNode().scrollTo({
+        x: width * (index + 1),
+        animated: true,
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -125,8 +137,8 @@ const Onboarding = () => {
               <Image
                 source={picture.src}
                 style={{
-                  width: width - theme.borderRadii.xl,
-                  height: ((width - theme.borderRadii.xl) * picture.height) / picture.width,
+                  width: width - (theme.borderRadii?.xl || 0),
+                  height: ((width - (theme.borderRadii?.xl || 0)) * picture.height) / picture.width,
                 }}
               />
             </Animated.View>
@@ -153,7 +165,7 @@ const Onboarding = () => {
             ...StyleSheet.absoluteFillObject,
             backgroundColor,
           }}
-        ></Animated.View>
+        />
 
         <View style={styles.pagination}>
           {slides.map((_, index) => (
@@ -168,22 +180,18 @@ const Onboarding = () => {
             { width: width * slides.length, flex: 1, transform: [{ translateX: multiply(x, -1) }] },
           ]}
         >
-          {slides.map((slide, index) => (
-            <SubSlide
-              key={index}
-              subtitle={slide.subtitle}
-              description={slide.description}
-              last={index === slides.length - 1}
-              onPress={() => {
-                if (scrollRef.current) {
-                  scrollRef.current.getNode().scrollTo({
-                    x: width * (index + 1),
-                    animated: true,
-                  });
-                }
-              }}
-            />
-          ))}
+          {slides.map((slide, index) => {
+            const isLast = index === slides.length - 1;
+            return (
+              <SubSlide
+                key={index}
+                subtitle={slide.subtitle}
+                description={slide.description}
+                last={isLast}
+                onPress={() => onNext(index, isLast)}
+              />
+            );
+          })}
         </Animated.View>
       </View>
     </View>

@@ -5,8 +5,9 @@ import * as React from 'react';
 import 'react-native-gesture-handler';
 import { Onboarding, Welcome } from './src/Authentication';
 import theme from './src/global/theme';
+import { Routes } from './src/types/Navigation';
 
-const AuthenticationStack = createStackNavigator();
+const AuthenticationStack = createStackNavigator<Routes>();
 const AuthenticationNavigator = () => (
   <AuthenticationStack.Navigator headerMode="none">
     <AuthenticationStack.Screen name="Onboarding" component={Onboarding} />
