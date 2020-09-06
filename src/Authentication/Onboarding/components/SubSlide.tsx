@@ -34,22 +34,20 @@ interface SubSlideProps {
   onPress: () => void;
 }
 
-const SubSlide = ({ subtitle, description, last, onPress }: SubSlideProps) => {
-  return (
-    <View style={styles.container}>
-      <Text variant="title2" style={styles.title}>
-        {subtitle}
-      </Text>
-      <Text variant="body" style={styles.body}>
-        {description}
-      </Text>
-      <Button
-        label={last ? "Let's get started" : 'Next'}
-        variant={last ? 'primary' : 'default'}
-        onPress={onPress}
-      />
-    </View>
-  );
-};
+const SubSlide = ({ subtitle, description, last, onPress }: SubSlideProps) => (
+  <View style={styles.container}>
+    <Text variant="title2" style={styles.title}>
+      {subtitle}
+    </Text>
+    <Text variant="body" style={styles.body}>
+      {description}
+    </Text>
+    <Button
+      label={last ? "Let's get started" : 'Next'}
+      variant={last ? 'primary' : 'default'}
+      onPress={onPress}
+    />
+  </View>
+);
 
 export default SubSlide;

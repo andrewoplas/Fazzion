@@ -8,7 +8,14 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "fix": "prettier --write ."
+    "fix": "prettier --write .",
+    "createBundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle",
+    "buildBundle": "curl \"http://localhost:8081/index.bundle?platform=android\" -o \"android/app/src/main/assets/index.android.bundle\"",
+    "clean": "cd android && ./gradlew clean",
+    "assembleDebug": "cd android && ./gradlew assembleDebug",
+    "assembleRelease": "cd android && ./gradlew assembleRelease",
+    "buildApk": "npm run clean && npm run createBundle && npm run buildBundle && npm run assembleRelease",
+    "bapk": "concurrently --kill-others \"npm run start\" \"npm run buildApk\""
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
@@ -33,6 +40,7 @@
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
     "babel-jest": "^25.1.0",
+    "concurrently": "^5.3.0",
     "eslint": "^6.5.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.4",

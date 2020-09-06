@@ -3,15 +3,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { ThemeProvider } from '@shopify/restyle';
 import * as React from 'react';
 import 'react-native-gesture-handler';
-import { Onboarding, Welcome } from './src/Authentication';
+import { Login, Onboarding, Welcome } from './src/Authentication';
 import theme from './src/global/theme';
 import { Routes } from './src/types/Navigation';
 
 const AuthenticationStack = createStackNavigator<Routes>();
 const AuthenticationNavigator = () => (
-  <AuthenticationStack.Navigator headerMode="none">
+  <AuthenticationStack.Navigator headerMode="none" initialRouteName="Login">
     <AuthenticationStack.Screen name="Onboarding" component={Onboarding} />
     <AuthenticationStack.Screen name="Welcome" component={Welcome} />
+    <AuthenticationStack.Screen name="Login" component={Login} />
   </AuthenticationStack.Navigator>
 );
 
