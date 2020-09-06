@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
-import { Dimensions, StyleSheet, View, Image } from 'react-native';
-import Animated, { divide, multiply, interpolate, Extrapolate } from 'react-native-reanimated';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import Animated, { divide, Extrapolate, interpolate, multiply } from 'react-native-reanimated';
 import { interpolateColor, useScrollHandler } from 'react-native-redash';
 import theme, { palette } from '../../global/theme';
+import { Routes, StackNavigationProps } from '../../types/Navigation';
 import PaginationDot from './components/PaginationDot';
 import Slide, { SLIDE_HEIGHT } from './components/Slide';
 import SubSlide from './components/SubSlide';
-import { StackNavigationProps, Routes } from '../../types/Navigation';
 
 const { width } = Dimensions.get('window');
 

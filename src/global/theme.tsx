@@ -9,8 +9,9 @@ export const palette = {
   shamrock: '#2CB9B0',
   gray: '#F4F0EF',
 
-  textTitle: '#0C0D34',
-  textBody: 'rgba(12, 13, 52, 0.7)',
+  primary: '#2CB9B0',
+  primary07: 'rgba(12, 13, 52, 0.7)',
+  secondary: '#0C0D34',
   white: '#fff',
 };
 
@@ -43,19 +44,19 @@ const theme: BaseTheme = createTheme({
       fontFamily: fontFamily.semibold,
       fontSize: 28,
       lineHeight: 30,
-      color: 'textTitle',
+      color: 'primary',
     },
     title2: {
       fontFamily: fontFamily.semibold,
       fontSize: 24,
       lineHeight: 30,
-      color: 'textTitle',
+      color: 'primary',
     },
     body: {
       fontFamily: fontFamily.regular,
       fontSize: 16,
       lineHeight: 24,
-      color: 'textBody',
+      color: 'secondary',
     },
     buttonLabel: {
       fontSize: 15,

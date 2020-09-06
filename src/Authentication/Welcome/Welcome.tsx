@@ -1,7 +1,9 @@
 import React from 'react';
-import { StyleSheet, Dimensions, Image } from 'react-native';
-import { Box, Text, Button } from '../../elements';
+import { Dimensions, Image, StyleSheet } from 'react-native';
+import { Box, Button, Text } from '../../elements';
 import theme from '../../global/theme';
+import { Routes, StackNavigationProps } from '../../types/Navigation';
+import { styles } from './styles';
 
 const { width } = Dimensions.get('window');
 
@@ -11,44 +13,24 @@ const picture = {
   height: 5074,
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 25,
-    paddingHorizontal: 30,
-  },
-
-  title: {
-    textAlign: 'center',
-  },
-
-  body: {
-    marginTop: 15,
-    textAlign: 'center',
-  },
-
-  buttonSpace: {
-    marginTop: 15,
-  },
-});
-
-const Welcome = () => (
+const Welcome = ({ navigation }: StackNavigationProps<Routes, 'Welcome'>) => (
   <Box flex={1} backgroundColor="white">
     <Box
       flex={1}
       borderBottomRightRadius="xl"
       backgroundColor="gray"
       alignItems="center"
-      justifyContent="flex-end"
+      justifyContent="center"
     >
       <Image
         source={picture.src}
-        style={{
-          width: width - (theme.borderRadii?.xl || 0),
-          height: ((width - (theme.borderRadii?.xl || 0)) * picture.height) / picture.width,
-        }}
+        style={[
+          styles.image,
+          {
+            width: width - 20 - (theme.borderRadii?.xl || 0),
+            height: ((width - (theme.borderRadii?.xl || 0)) * picture.height) / picture.width,
+          },
+        ]}
       />
     </Box>
     <Box flex={1} borderTopLeftRadius="xl">
@@ -63,7 +45,7 @@ const Welcome = () => (
         <Button
           variant="primary"
           label="Have an account? Login"
-          onPress={() => null}
+          onPress={() => navigation.navigate('Login')}
           style={styles.buttonSpace}
         />
         <Button label="Join us, it's Free" onPress={() => null} style={styles.buttonSpace} />

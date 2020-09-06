@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { ReactNode, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import { Text } from '.';
 import { palette } from '../global/theme';
+import Text from './Text';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,13 +15,14 @@ const styles = StyleSheet.create({
 });
 
 interface ButtonProps {
-  label: string;
+  label?: string;
   variant: 'default' | 'primary' | 'transparent';
   onPress: () => void;
-  style: any;
+  style?: any;
+  children?: ReactNode;
 }
 
-const Button = ({ label, variant, onPress, style }: ButtonProps) => {
+const Button = ({ label, variant, onPress, children, style }: ButtonProps) => {
   const getBackgroundColor = useCallback(() => {
     switch (variant) {
       case 'primary':
@@ -38,9 +39,9 @@ const Button = ({ label, variant, onPress, style }: ButtonProps) => {
       case 'primary':
         return palette.white;
       case 'transparent':
-        return palette.textTitle;
+        return palette.primary;
       default:
-        return palette.textTitle;
+        return palette.primary;
     }
   }, [variant]);
 
@@ -50,7 +51,10 @@ const Button = ({ label, variant, onPress, style }: ButtonProps) => {
       onPress={onPress}
     >
       <Text variant="buttonLabel" style={{ color: getTextColor() }}>
-        {label}
+        <>
+          {label}
+          {children}
+        </>
       </Text>
     </RectButton>
   );
